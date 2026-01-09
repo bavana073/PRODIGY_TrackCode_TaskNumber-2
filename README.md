@@ -1,46 +1,59 @@
-import tkinter as tk
-from tkinter import messagebox, simpledialog
+tasks = []
+
+def show_tasks():
+    if not tasks:
+        print("\nNo tasks available.")
+    else:
+        print("\nYour To-Do List:")
+        for i, task in enumerate(tasks, start=1):
+            print(f"{i}. {task}")
 
 def add_task():
-    task = entry.get()
-    if task == "":
-        messagebox.showwarning("Warning", "Please enter a task")
-    else:
-        listbox.insert(tk.END, task)
-        entry.delete(0, tk.END)
+    task = input("\nEnter new task: ")
+    tasks.append(task)
+    print("Task added successfully!")
 
 def edit_task():
-    try:
-        index = listbox.curselection()[0]
-        old_task = listbox.get(index)
-        new_task = simpledialog.askstring(
-            "Edit Task", "Edit your task:", initialvalue=old_task
-        )
-        if new_task:
-            listbox.delete(index)
-            listbox.insert(index, new_task)
-    except IndexError:
-        messagebox.showwarning("Warning", "Please select a task to edit")
+    show_tasks()
+    if tasks:
+        num = int(input("\nEnter task number to edit: "))
+        if 1 <= num <= len(tasks):
+            new_task = input("Enter new task: ")
+            tasks[num - 1] = new_task
+            print("Task updated successfully!")
+        else:
+            print("Invalid task number.")
 
 def delete_task():
-    try:
-        index = listbox.curselection()[0]
-        listbox.delete(index)
-    except IndexError:
-        messagebox.showwarning("Warning", "Please select a task to delete")
+    show_tasks()
+    if tasks:
+        num = int(input("\nEnter task number to delete: "))
+        if 1 <= num <= len(tasks):
+            tasks.pop(num - 1)
+            print("Task deleted successfully!")
+        else:
+            print("Invalid task number.")
 
-root = tk.Tk()
-root.title("To-Do List App")
-root.geometry("350x400")
+while True:
+    print("\n--- TO-DO LIST MENU ---")
+    print("1. View Tasks")
+    print("2. Add Task")
+    print("3. Edit Task")
+    print("4. Delete Task")
+    print("5. Exit")
 
-entry = tk.Entry(root, width=30)
-entry.pack(pady=10)
+    choice = input("Enter your choice (1-5): ")
 
-tk.Button(root, text="Add Task", width=15, command=add_task).pack(pady=5)
-tk.Button(root, text="Edit Task", width=15, command=edit_task).pack(pady=5)
-tk.Button(root, text="Delete Task", width=15, command=delete_task).pack(pady=5)
-
-listbox = tk.Listbox(root, width=40, height=15)
-listbox.pack(pady=10)
-
-root.mainloop()
+    if choice == "1":
+        show_tasks()
+    elif choice == "2":
+        add_task()
+    elif choice == "3":
+        edit_task()
+    elif choice == "4":
+        delete_task()
+    elif choice == "5":
+        print("Exiting To-Do List App. Goodbye!")
+        break
+    else:
+        print("Invalid choice. Please try again.")
